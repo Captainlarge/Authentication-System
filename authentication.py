@@ -2,8 +2,8 @@ import sqlite3
 import os
 from time import sleep
 from turtle import color
-import Authentication.format as format
-import Authentication.Config.cfg as cfg
+import format as format
+import cfg
 from termcolor import colored
 
 access = False
@@ -47,6 +47,7 @@ def authenticate(hello):
         print(format.THANK)
         sleep(5)
         cfg.cls()
+        return False, None
 
     # Determines whether login detail are allowed to access
     def login(hello):
@@ -76,7 +77,7 @@ def authenticate(hello):
             sleep(7)
             cfg.cls()
             access = True
-            return access
+            return access, current
         elif current == None:
             print(format.UNSUCCESSFUL)
             sleep(3)
@@ -90,6 +91,6 @@ def authenticate(hello):
     decision = input("Please make a selection: \n")
     cfg.cls()
     if decision == "1":
-        register(hello)
+        return register(hello)
     if decision == "2":
         return login(hello)
