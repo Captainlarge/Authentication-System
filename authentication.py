@@ -55,7 +55,7 @@ def authenticate(hello):
         print(format.LOGIN)
         inp_username = input("")
         inp_password = input("")
-        current = hello.execute("SELECT First_Name, Last_Name FROM LOGIN WHERE Username = ? AND password = ?", [
+        current = hello.execute("SELECT * FROM LOGIN WHERE Username = ? AND password = ?", [
             inp_username, inp_password]).fetchone()
         cfg.cls()
         if current != None:
@@ -81,8 +81,7 @@ def authenticate(hello):
         elif current == None:
             print(format.UNSUCCESSFUL)
             sleep(3)
-            access = False
-            return access
+            return False, None
         cfg.cls()
 
     # Calls the menu page
