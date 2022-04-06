@@ -7,7 +7,6 @@ import authentication
 import cfg
 import format
 
-
 access = False
 
 # Verifying login status
@@ -18,8 +17,8 @@ while True:
         user_id = current_user["ID"]
         break
 
-
 # Initialise POSTS database
+
 
 def dict_factory(cursor, row):
     d = {}
@@ -30,7 +29,6 @@ def dict_factory(cursor, row):
 
 forum = sqlite3.connect("userbase.db")
 forum.row_factory = dict_factory
-
 
 forum.execute('''CREATE TABLE if not exists POSTS
                 (ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -52,7 +50,7 @@ def home(forum):
     if decision == "2":
         createPost(forum)
     if decision == "3":
-      deletePost(forum)
+        deletePost(forum)
 
 
 def createPost(forum):
@@ -61,8 +59,9 @@ def createPost(forum):
     title = input("")
     body = input("")
     date = input("")
-    forum.execute("INSERT INTO POSTS(User_ID, Title, Body, Date) VALUES (?, ?, ?, ?)", [
-        user_id, title, body, date])
+    forum.execute(
+        "INSERT INTO POSTS(User_ID, Title, Body, Date) VALUES (?, ?, ?, ?)",
+        [user_id, title, body, date])
     forum.commit()
     cfg.cls()
     print(format.THANK)
@@ -75,12 +74,15 @@ def viewPost(forum):
     current = forum.execute("SELECT * FROM POSTS").fetchall()
     print(format.VIEW)
     for x in range(len(current)):
-        user = forum.execute("SELECT * FROM LOGIN WHERE ID = ?", [current[x]["User_ID"]]).fetchall()
+        user = forum.execute("SELECT * FROM LOGIN WHERE ID = ?",
+                             [current[x]["User_ID"]]).fetchall()
         print(colored(current[x]["Title"], "blue", attrs=["bold"]))
         print(colored(current[x]["Body"], "blue"))
         p = user[0]["First_Name"]
         print(colored(f"By {p}", "blue", attrs=["dark"]))
-    print(colored('''
+    print(
+        colored(
+            '''
 Press enter to go back
 ######################################################################################
     ''', "blue"))
@@ -88,13 +90,13 @@ Press enter to go back
     home(forum)
 
 
-
 def deletePost(forum):
-  current = forum.execute("SELECT * FROM POSTS WHERE user_ID = ?", [user_id]).fetchall()
-  for x in range(len(current)):
-    print(current[x]["Title"])
-    print("Please enter title of the post you wish to delete:")
-    forum.execute("DELETE FROM POSTS WHERE Title = ?", [chosen])
+    current = forum.execute("SELECT * FROM POSTS WHERE user_ID = ?",
+                            [user_id]).fetchall()
+    for x in range(len(current)):
+        print(current[x]["Title"])
+        print("Please enter title of the post you wish to delete:")
+        forum.execute("DELETE FROM POSTS WHERE Title = ?", [chosen])
 
-  
+
 home(forum)
