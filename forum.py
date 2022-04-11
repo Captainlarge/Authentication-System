@@ -1,3 +1,4 @@
+from tkinter.font import BOLD
 from termcolor import colored
 import sqlite3
 import os
@@ -51,6 +52,8 @@ def home(forum):
         createPost(forum)
     if decision == "3":
         deletePost(forum)
+    if decision == "4":
+        editPost(forum)
 
 
 def createPost(forum):
@@ -76,10 +79,11 @@ def viewPost(forum):
     for x in range(len(current)):
         user = forum.execute("SELECT * FROM LOGIN WHERE ID = ?",
                              [current[x]["User_ID"]]).fetchall()
-        print(colored(current[x]["Title"], "blue", attrs=["bold"]))
-        print(colored(current[x]["Body"], "blue"))
-        p = user[0]["First_Name"]
-        print(colored(f"By {p}", "blue", attrs=["dark"]))
+        if current[x]["Title"] != "":
+            print(colored(current[x]["Title"], "blue", attrs=["bold"]))
+            print(colored(current[x]["Body"], "blue"))
+            p = user[0]["First_Name"]
+            print(colored(f"By {p}", "blue", attrs=["dark"]))
     print(
         colored(
             '''
@@ -95,13 +99,29 @@ def deletePost(forum):
     current = forum.execute("SELECT * FROM POSTS WHERE user_ID = ?",
                             [user_id]).fetchall()
     for x in range(len(current)):
-        print(current[x]["Title"])
-    print("Please enter title of the post you wish to delete:")
+        print(colored(current[x]["Title"], "blue", attrs=["bold"]))
+    print(colored("######################################################################################", "blue"))
     chosen = input("")
     forum.execute("DELETE FROM POSTS WHERE Title = ?", [chosen])
     forum.commit()
     print(format.THANK)
     sleep(3)
+    cfg.cls()
+    home(forum)
+
+
+def editPost(forum):
+    print(format.EDIT)
+    current = forum.execute("SELECT * FROM POSTS WHERE user_ID = ?",
+                            [user_id]).fetchall()
+    for x in range(len(current)):
+        print(colored(current[x]["Title"], "blue", attrs=["bold"]))
+    print(colored("######################################################################################", "blue"))
+    chosen = input("")
+    new = input("")
+    forum.execute("UPDATE POSTS SET Body = ? WHERE Title = ?", [new, chosen])
+    forum.commit()
+    cfg.cls()
     home(forum)
 
 
