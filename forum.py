@@ -91,12 +91,18 @@ Press enter to go back
 
 
 def deletePost(forum):
+    print(format.DELETE)
     current = forum.execute("SELECT * FROM POSTS WHERE user_ID = ?",
                             [user_id]).fetchall()
     for x in range(len(current)):
         print(current[x]["Title"])
-        print("Please enter title of the post you wish to delete:")
-        forum.execute("DELETE FROM POSTS WHERE Title = ?", [chosen])
+    print("Please enter title of the post you wish to delete:")
+    chosen = input("")
+    forum.execute("DELETE FROM POSTS WHERE Title = ?", [chosen])
+    forum.commit()
+    print(format.THANK)
+    sleep(3)
+    home(forum)
 
 
 home(forum)
